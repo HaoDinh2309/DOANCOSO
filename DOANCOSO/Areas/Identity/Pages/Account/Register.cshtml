@@ -1,100 +1,635 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký tài khoản";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
-            <h2>Create a new account</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
-            <!-- Email -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-
-            <!-- Password -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-
-            <!-- Full Name -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FullName" class="form-control" placeholder="Full Name" />
-                <label asp-for="Input.FullName">Full Name</label>
-                <span asp-validation-for="Input.FullName" class="text-danger"></span>
-            </div>
-
-            <!-- Date of Birth -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.DateOfBirth" class="form-control" type="date" placeholder="Date of Birth" />
-                <label asp-for="Input.DateOfBirth">Date of Birth</label>
-                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
-            </div>
-
-            <!-- Avatar (File Upload) -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Avatar" class="form-control" type="file" />
-                <label asp-for="Input.Avatar">Avatar</label>
-                <span asp-validation-for="Input.Avatar" class="text-danger"></span>
-            </div>
-            <div class="form-floating">
-                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-control">
-                    <option disabled selected>Select Role</option>
-                </select>
-            </div>
-
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @if ((Model.ExternalLogins?.Count ?? 0) == 0)
-            {
-                <div>
-                    <p>
-                        There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
-                            article
-                            about setting up this ASP.NET application to support logging in via external services
-                        </a>.
-                    </p>
-                </div>
-            }
-            else
-            {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
-                        <p>
-                            @foreach (var provider in Model.ExternalLogins)
-                            {
-                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                            }
-                        </p>
+<div class="register-container">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8">
+                <div class="glass-card">
+                    <div class="card-header-premium text-center p-4">
+                        <div class="logo-container mb-3">
+                            <div class="logo-circle">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                        </div>
+                        <h3 class="fw-bold text-white mb-1">
+                            <span class="gradient-text">@ViewData["Title"]</span>
+                        </h3>
+                        <p class="text-white-50">Tạo tài khoản để trải nghiệm dịch vụ</p>
                     </div>
-                </form>
-            }
-        </section>
+
+                    <div class="card-body p-4 p-lg-5">
+                        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert custom-alert" role="alert"></div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Email -->
+                                    <div class="input-group-premium mb-4">
+                                        <div class="input-icon">
+                                            <i class="fas fa-envelope-open"></i>
+                                        </div>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Input.Email" class="form-control custom-input"
+                                                   autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                            <label asp-for="Input.Email">Email của bạn</label>
+                                        </div>
+                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="input-group-premium mb-4">
+                                        <div class="input-icon">
+                                            <i class="fas fa-lock"></i>
+                                        </div>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Input.Password" class="form-control custom-input"
+                                                   autocomplete="new-password" aria-required="true" placeholder="Password"
+                                                   id="password-field" />
+                                            <label asp-for="Input.Password">Mật khẩu</label>
+                                        </div>
+                                        <div class="password-toggle" onclick="togglePassword('password-field', 'password-icon')">
+                                            <i id="password-icon" class="fas fa-eye"></i>
+                                        </div>
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Confirm Password -->
+                                    <div class="input-group-premium mb-4">
+                                        <div class="input-icon">
+                                            <i class="fas fa-key"></i>
+                                        </div>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Input.ConfirmPassword" class="form-control custom-input"
+                                                   autocomplete="new-password" aria-required="true" placeholder="Confirm Password"
+                                                   id="confirm-field" />
+                                            <label asp-for="Input.ConfirmPassword">Xác nhận mật khẩu</label>
+                                        </div>
+                                        <div class="password-toggle" onclick="togglePassword('confirm-field', 'confirm-icon')">
+                                            <i id="confirm-icon" class="fas fa-eye"></i>
+                                        </div>
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!-- Full Name -->
+                                    <div class="input-group-premium mb-4">
+                                        <div class="input-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Input.FullName" class="form-control custom-input" placeholder="Full Name" />
+                                            <label asp-for="Input.FullName">Họ và tên</label>
+                                        </div>
+                                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Date of Birth -->
+                                    <div class="input-group-premium mb-4">
+                                        <div class="input-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="form-floating flex-grow-1">
+                                            <input asp-for="Input.DateOfBirth" class="form-control custom-input" type="date" placeholder="Date of Birth" />
+                                            <label asp-for="Input.DateOfBirth">Ngày sinh</label>
+                                        </div>
+                                        <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Role Selection -->
+                                    <div class="input-group-premium mb-4">
+                                        <div class="input-icon">
+                                            <i class="fas fa-user-tag"></i>
+                                        </div>
+                                        <div class="form-floating flex-grow-1">
+                                            <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select custom-input">
+                                                <option disabled selected>Chọn vai trò</option>
+                                            </select>
+                                            <label for="Input_Role">Vai trò</label>
+                                        </div>
+                                        <span asp-validation-for="Input.Role" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Avatar (File Upload) -->
+                            <div class="avatar-upload-container mb-4">
+                                <div class="avatar-header">
+                                    <label for="Input_Avatar" class="form-label">
+                                        <i class="fas fa-image fa-fw me-1"></i> Ảnh đại diện
+                                    </label>
+                                </div>
+                                <div class="avatar-content">
+                                    <div class="avatar-preview" id="imagePreviewContainer">
+                                        <img id="imagePreview" src="/api/placeholder/150/150" class="avatar-img" alt="Avatar Preview">
+                                        <div class="avatar-overlay">
+                                            <i class="fas fa-camera"></i>
+                                        </div>
+                                    </div>
+                                    <div class="avatar-upload">
+                                        <input asp-for="Input.Avatar" class="avatar-input" type="file" id="Input_Avatar" onchange="previewImage(this);" accept="image/*" />
+                                        <div class="upload-text">
+                                            <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                            <p>Kéo thả hoặc nhấp để tải ảnh lên</p>
+                                            <small class="text-muted">PNG, JPG hoặc GIF (Max. 2MB)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Input.Avatar" class="text-danger"></span>
+                            </div>
+
+                            <!-- Register Button -->
+                            <div class="d-grid gap-2 mt-4 mb-3">
+                                <button id="registerSubmit" type="submit" class="btn premium-btn btn-lg">
+                                    <span class="btn-text">Đăng ký tài khoản</span>
+                                    <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-4 pt-3 border-top border-light">
+                                <p>
+                                    Đã có tài khoản?
+                                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="premium-link">
+                                        <i class="fas fa-sign-in-alt fa-fw me-1"></i> Đăng nhập ngay
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-footer-premium text-center py-3">
+                        <div class="security-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Thông tin của bạn được bảo mật an toàn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- Background Elements -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #8b5cf6;
+            --secondary-color: #4f46e5;
+            --accent-color: #a855f7;
+            --gradient-start: #4f46e5;
+            --gradient-mid: #8b5cf6;
+            --gradient-end: #a855f7;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --text-color: #334155;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: var(--text-color);
+        }
+
+        .register-container {
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f0f4ff 0%, #eef1f5 100%);
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+            .glass-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+            }
+
+        /* Header Styles */
+        .card-header-premium {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-circle {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+            .logo-circle i {
+                font-size: 32px;
+                color: white;
+            }
+
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Input Fields */
+        .input-group-premium {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-radius: var(--border-radius);
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+            .input-group-premium:focus-within {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            }
+
+        .input-icon {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--primary-color);
+            z-index: 10;
+        }
+
+        .custom-input {
+            border: none;
+            box-shadow: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding-left: 0.5rem;
+            background-color: transparent;
+        }
+
+            .custom-input:focus {
+                box-shadow: none;
+                border-color: transparent;
+            }
+
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
+            color: #94a3b8;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+            .password-toggle:hover {
+                color: var(--primary-color);
+            }
+
+        /* Avatar Upload */
+        .avatar-upload-container {
+            background-color: #f8fafc;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .avatar-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+            .avatar-header .form-label {
+                font-weight: 500;
+                color: var(--dark-color);
+                margin-bottom: 0;
+            }
+
+        .avatar-content {
+            display: flex;
+            padding: 1.5rem;
+        }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1.5rem;
+            position: relative;
+            border: 3px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 50%;
+        }
+
+            .avatar-overlay i {
+                color: white;
+                font-size: 24px;
+            }
+
+        .avatar-preview:hover .avatar-overlay {
+            opacity: 1;
+        }
+
+        .avatar-upload {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-height: 120px;
+        }
+
+            .avatar-upload:hover {
+                border-color: var(--primary-color);
+                background-color: rgba(139, 92, 246, 0.05);
+            }
+
+        .avatar-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .upload-text {
+            color: #64748b;
+        }
+
+            .upload-text i {
+                color: var(--primary-color);
+            }
+
+        /* Button Styles */
+        .premium-btn {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+            .premium-btn:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, var(--gradient-end), var(--gradient-start));
+                opacity: 0;
+                z-index: -1;
+                transition: opacity 0.3s ease;
+            }
+
+            .premium-btn:hover:before {
+                opacity: 1;
+            }
+
+        .btn-text {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .btn-icon {
+            margin-left: 10px;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .premium-btn:hover .btn-icon {
+            transform: translateX(5px);
+        }
+
+        /* Link Styles */
+        .premium-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .premium-link:hover {
+                color: var(--secondary-color);
+                text-decoration: none;
+            }
+
+        /* Footer */
+        .card-footer-premium {
+            background-color: rgba(248, 250, 252, 0.8);
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+            .security-badge i {
+                color: #10b981;
+                margin-right: 8px;
+            }
+
+        /* Alert Styles */
+        .custom-alert {
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid transparent;
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        /* Background Shapes */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            filter: blur(70px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 30%;
+            right: -80px;
+        }
+
+        .shape-3 {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            left: 10%;
+        }
+
+        .shape-4 {
+            width: 350px;
+            height: 350px;
+            bottom: -150px;
+            right: 10%;
+        }
+
+        .shape-5 {
+            width: 180px;
+            height: 180px;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .avatar-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .avatar-preview {
+                margin-right: 0;
+            }
+
+            .avatar-upload {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        // Password visibility toggle
+        function togglePassword(fieldId, iconId) {
+            const passwordField = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        // Image preview
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
 }

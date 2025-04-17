@@ -1,83 +1,462 @@
 ﻿@page
 @model LoginModel
-
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Đăng nhập";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
+<div class="login-container">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-7 col-xl-6">
+                <div class="glass-card">
+                    <div class="card-header-premium text-center p-4">
+                        <div class="logo-container mb-3">
+                            <div class="logo-circle">
+                                <i class="fas fa-fingerprint"></i>
+                            </div>
                         </div>
-                    </form>
-                }
-            }
-        </section>
+                        <h3 class="fw-bold text-white mb-1">
+                            <span class="gradient-text">@ViewData["Title"]</span>
+                        </h3>
+                        <p class="text-white-50">Chào mừng bạn quay trở lại hệ thống</p>
+                    </div>
+
+                    <div class="card-body p-4 p-lg-5">
+                        <form id="account" method="post" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert custom-alert" role="alert"></div>
+
+                            <!-- Email -->
+                            <div class="input-group-premium mb-4">
+                                <div class="input-icon">
+                                    <i class="fas fa-envelope-open"></i>
+                                </div>
+                                <div class="form-floating flex-grow-1">
+                                    <input asp-for="Input.Email" class="form-control form-control-lg custom-input"
+                                           autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                    <label asp-for="Input.Email" class="form-label">Email của bạn</label>
+                                </div>
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="input-group-premium mb-4">
+                                <div class="input-icon">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div class="form-floating flex-grow-1">
+                                    <input asp-for="Input.Password" class="form-control form-control-lg custom-input"
+                                           autocomplete="current-password" aria-required="true" placeholder="password"
+                                           id="password-field" />
+                                    <label asp-for="Input.Password" class="form-label">Mật khẩu</label>
+                                </div>
+                                <div class="password-toggle" onclick="togglePassword()">
+                                    <i id="password-icon" class="fas fa-eye"></i>
+                                </div>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+
+                            <!-- Remember Me -->
+                            <div class="form-check custom-checkbox mb-4">
+                                <input class="form-check-input" asp-for="Input.RememberMe" id="RememberMe" />
+                                <label class="form-check-label" for="RememberMe">
+                                    <i class="fas fa-clock fa-fw me-1"></i> Ghi nhớ đăng nhập
+                                </label>
+                            </div>
+
+                            <!-- Login Button -->
+                            <div class="d-grid gap-2 mb-4">
+                                <button id="login-submit" type="submit" class="btn premium-btn btn-lg">
+                                    <span class="btn-text">Đăng nhập</span>
+                                    <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                                </button>
+                            </div>
+
+                            <!-- Additional Options -->
+                            <div class="d-flex justify-content-between flex-wrap mb-3">
+                                <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none fancy-link">
+                                    <i class="fas fa-key fa-fw me-1"></i> Quên mật khẩu?
+                                </a>
+                                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-decoration-none fancy-link">
+                                    <i class="fas fa-paper-plane fa-fw me-1"></i> Gửi lại email xác nhận
+                                </a>
+                            </div>
+
+                            <div class="text-center mt-4 pt-3 border-top border-light">
+                                <p>
+                                    Chưa có tài khoản?
+                                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="premium-link">
+                                        <i class="fas fa-user-plus fa-fw me-1"></i> Đăng ký ngay
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-footer-premium text-center py-3">
+                        <div class="security-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Bảo mật cao</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- Background Elements -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #8b5cf6;
+            --secondary-color: #4f46e5;
+            --accent-color: #a855f7;
+            --gradient-start: #4f46e5;
+            --gradient-mid: #8b5cf6;
+            --gradient-end: #a855f7;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --text-color: #334155;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: var(--text-color);
+        }
+
+        .login-container {
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f0f4ff 0%, #eef1f5 100%);
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+            .glass-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+            }
+
+        /* Card Header */
+        .card-header-premium {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card-header-premium::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+                opacity: 0.6;
+            }
+
+        /* Logo */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Text Gradient */
+        .gradient-text {
+            background: linear-gradient(to right, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Input Styling */
+        .input-group-premium {
+            display: flex;
+            align-items: center;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+            .input-group-premium:focus-within {
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+                border-color: var(--primary-color);
+            }
+
+        .input-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .custom-input {
+            border: none;
+            border-radius: 0 12px 12px 0 !important;
+            background-color: transparent;
+        }
+
+            .custom-input:focus {
+                box-shadow: none;
+            }
+
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: var(--primary-color);
+            opacity: 1;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Custom Checkbox */
+        .custom-checkbox .form-check-input {
+            border-color: var(--primary-color);
+        }
+
+            .custom-checkbox .form-check-input:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+        /* Premium Button */
+        .premium-btn {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            color: white;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .premium-btn:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: all 0.5s ease;
+            }
+
+            .premium-btn:hover:before {
+                left: 100%;
+            }
+
+            .premium-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+            }
+
+        .btn-text {
+            z-index: 2;
+        }
+
+        .btn-icon {
+            z-index: 2;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .premium-btn:hover .btn-icon {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Fancy Link */
+        .fancy-link {
+            color: var(--primary-color);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+            .fancy-link:after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -2px;
+                left: 0;
+                background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+                transition: all 0.3s ease;
+            }
+
+            .fancy-link:hover:after {
+                width: 100%;
+            }
+
+        /* Premium Link */
+        .premium-link {
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: rgba(139, 92, 246, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+            .premium-link:hover {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+        /* Card Footer */
+        .card-footer-premium {
+            background-color: rgba(248, 250, 252, 0.8);
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* Custom Alert */
+        .custom-alert {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+        }
+
+        /* Background Shapes */
+        .shape {
+            position: absolute;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0) 70%);
+            top: -100px;
+            right: -100px;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.3) 0%, rgba(79, 70, 229, 0) 70%);
+            bottom: -150px;
+            left: -150px;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0) 70%);
+            top: 30%;
+            left: 5%;
+        }
+
+        .shape-4 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, rgba(236, 72, 153, 0) 70%);
+            bottom: 20%;
+            right: 10%;
+        }
+    </style>
+    <script>
+        // Kích hoạt validation của Bootstrap 5
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // Toggle Password Visibility
+        function togglePassword() {
+            const passwordField = document.getElementById('password-field');
+            const passwordIcon = document.getElementById('password-icon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 }

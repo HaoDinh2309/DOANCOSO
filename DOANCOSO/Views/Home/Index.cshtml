@@ -1,68 +1,479 @@
 ﻿@{
-    Layout = null;
+    Layout = "_Layout";  
 }
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Duolingo Clone - Trang chính</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnglishLearn - Học tiếng Anh miễn phí</title>
+    <style>
+        :root {
+            --primary-color: #58cc02;
+            --primary-hover: #47a700;
+            --secondary-color: #fff;
+            --text-color: #3c3c3c;
+            --gray-light: #f0f0f0;
+            --gray: #e5e5e5;
+            --border-radius: 12px;
+        }
+
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: var(--text-color);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #fff;
+            border-right: 1px solid var(--gray);
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 20px 30px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            margin-bottom: 5px;
+            transition: background-color 0.2s;
+            border-radius: 16px;
+            margin: 0 10px 5px;
+        }
+
+            .menu-item:hover {
+                background-color: var(--gray-light);
+            }
+
+            .menu-item.active {
+                background-color: #e9f8df;
+                color: var(--primary-color);
+                font-weight: bold;
+            }
+
+        .menu-icon {
+            background-color: #fbe4a4;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 22px;
+        }
+
+            .menu-icon.learn {
+                background-color: #fff0cd;
+                color: #e5a600;
+            }
+
+            .menu-icon.speak {
+                background-color: #ffe3e1;
+                color: #ff4b4b;
+            }
+
+            .menu-icon.leaderboard {
+                background-color: #fff0cd;
+                color: #e5a600;
+            }
+
+            .menu-icon.quest {
+                background-color: #e9f8df;
+                color: var(--primary-color);
+            }
+
+            .menu-icon.shop {
+                background-color: #ffe3e1;
+                color: #ff4b4b;
+            }
+
+            .menu-icon.profile {
+                background-color: #e6e6f0;
+                color: #6b6b9c;
+            }
+
+            .menu-icon.more {
+                background-color: #e6e6f0;
+                color: #6b6b9c;
+            }
+
+        .main-content {
+            flex: 1;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .course-title {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .back-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .user-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            background-color: var(--gray-light);
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+
+        .flag-icon {
+            width: 24px;
+            height: 18px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        .learning-path {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .level-item {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .level-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background-color: #ddd;
+            color: white;
+            border: 5px solid #eee;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+
+            .level-button.completed {
+                background-color: var(--primary-color);
+                border-color: #c2f0a2;
+            }
+
+            .level-button.current {
+                background-color: var(--primary-color);
+                border-color: #c2f0a2;
+                box-shadow: 0 0 0 5px rgba(88, 204, 2, 0.2);
+            }
+
+            .level-button.locked {
+                background-color: #c8c8c8;
+                border-color: #e5e5e5;
+            }
+
+        .level-line {
+            position: absolute;
+            top: 40px;
+            left: calc(50% - 40px);
+            width: 80px;
+            height: 140px;
+            border-left: 5px solid #eee;
+            z-index: 1;
+        }
+
+            .level-line.completed {
+                border-color: #c2f0a2;
+            }
+
+        .right-sidebar {
+            width: 320px;
+            background-color: #fff;
+            border-left: 1px solid var(--gray);
+            padding: 20px;
+        }
+
+        .right-box {
+            background-color: var(--gray-light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+            .right-box h3 {
+                margin-top: 0;
+                font-weight: 700;
+                font-size: 18px;
+            }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-hover);
+            }
+
+        .btn-secondary {
+            background-color: #1cb0f6;
+            color: white;
+        }
+
+        .task-progress {
+            height: 12px;
+            background-color: #e5e5e5;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+        }
+
+        .daily-task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #ffe81a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .task-details {
+            flex: 1;
+        }
+
+        .character-mascot {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            bottom: 0;
+            right: -100px;
+        }
+
+        .locked-chest {
+            width: 60px;
+            height: 60px;
+            background-color: #eee;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 20px auto;
+            color: #aaa;
+        }
+
+        .mascot-image {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
-<body class="bg-white font-sans">
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="#" class="logo">englishlearn</a>
 
-    <div class="flex min-h-screen">
-        <aside class="w-48 bg-white border-r p-4 space-y-4">
-            <h1 class="text-2xl font-bold text-green-500 mb-4">duolingo</h1>
-            <nav class="space-y-3">
-                <a href="/Home/Index" class="flex items-center gap-2 text-blue-500 font-bold">🏠 HỌC</a>
-                <a href="/Home/PhatAm" class="flex items-center gap-2">👄 PHÁT ÂM</a>
-                <a href="/Home/BangXepHang" class="flex items-center gap-2">🛡️ BẢNG XẾP HẠNG</a>
-                <a href="/Home/NhiemVu" class="flex items-center gap-2">🎯 NHIỆM VỤ</a>
-                <a href="/Home/CuaHang" class="flex items-center gap-2">🛍️ CỬA HÀNG</a>
-                <a href="/Home/HoSo" class="flex items-center gap-2">👤 HỒ SƠ</a>
-                <a href="/Home/XemThem" class="flex items-center gap-2">💬 XEM THÊM</a>
-            </nav>
-        </aside>
+            <a href="#" class="menu-item active">
+                <div class="menu-icon learn">🏠</div>
+                HỌC
+            </a>
 
-        <main class="flex-1 p-8 flex flex-col items-center">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chào mừng bạn đến với Duolingo!</h2>
-            <div class="space-y-4">
-                <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
-                    🐥
+            <a href="#" class="menu-item">
+                <div class="menu-icon speak">🎤</div>
+                PHÁT ÂM
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-icon leaderboard">🏆</div>
+                BẢNG XẾP HẠNG
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-icon quest">📝</div>
+                NHIỆM VỤ
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-icon shop">🛒</div>
+                CỬA HÀNG
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-icon profile">👤</div>
+                HỒ SƠ
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-icon more">⋯</div>
+                XEM THÊM
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="course-title">
+                    <button class="back-button">←</button>
+                    <span>PHẦN 1, CỬA 1</span>
                 </div>
-                <p class="text-gray-600 text-center max-w-md">
-                    Hãy chọn một bài học để bắt đầu hành trình học ngoại ngữ của bạn.
-                </p>
-            </div>
-        </main>
 
-        <div class="w-80 p-6 border-l space-y-6">
-            <div class="bg-gray-100 p-4 rounded">
-                <h2 class="font-semibold">Mở khóa Bảng xếp hạng!</h2>
-                <p class="text-sm text-gray-500">Hoàn thành thêm 10 bài học để bắt đầu thi đua</p>
-            </div>
-
-            <div class="bg-gray-100 p-4 rounded">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-semibold">Nhiệm vụ hằng ngày</h2>
-                    <a href="#" class="text-sm text-blue-500">XEM TẤT CẢ</a>
-                </div>
-                <div class="flex items-center mt-2 gap-2">
-                    ⚡ Kiếm 10 KN
-                </div>
-                <div class="w-full h-2 bg-gray-300 rounded mt-2">
-                    <div class="w-0 h-2 bg-yellow-400 rounded"></div>
+                <div class="user-stats">
+                    
+                    <div class="stat-item">
+                        <span class="stat-icon">🔥</span>
+                        0
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">💎</span>
+                        500
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">❤️</span>
+                        5
+                    </div>
                 </div>
             </div>
 
-            <!-- Cập nhật phần Tạo hồ sơ và Đăng nhập -->
-            <div class="bg-gray-100 p-4 rounded space-y-3">
-                <p class="font-semibold">Tạo hồ sơ để lưu tiến trình của bạn!</p>
-                <a href="/Identity/Account/Register" class="bg-green-500 text-white px-4 py-2 rounded w-full font-semibold block text-center">TẠO HỒ SƠ</a>
-                <a href="/Identity/Account/Login" class="bg-blue-500 text-white px-4 py-2 rounded w-full font-semibold block text-center">ĐĂNG NHẬP</a>
+            <div class="learning-path">
+                <div class="level-item">
+                    <div class="level-button completed">
+                        ★
+                    </div>
+                    <div class="level-line completed"></div>
+                    
+                </div>
+
+                <div class="level-item">
+                    <div class="level-button current">
+                        ★
+                    </div>
+                    <div class="level-line"></div>
+                </div>
+
+                <div class="level-item">
+                    <div class="level-button locked">
+                        ★
+                    </div>
+                    <div class="level-line"></div>
+                </div>
+
+                <div class="level-item">
+                    <div class="locked-chest">
+                        🔒
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="right-box">
+                <h3>Mở khóa Bảng xếp hạng!</h3>
+                <p>Hoàn thành thêm 10 bài học để bắt đầu thi đua</p>
+                <div class="locked-chest">
+                    🔒
+                </div>
+            </div>
+
+            <div class="right-box">
+                <h3>Nhiệm vụ hằng ngày</h3>
+                <div class="daily-task">
+                    <div class="task-icon">⚡</div>
+                    <div class="task-details">
+                        <div>Kiếm 10 KN</div>
+                        <div class="task-progress">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <small>0 / 10</small>
+                    </div>
+                </div>
+                <button class="btn btn-secondary">XEM TẤT CẢ</button>
+            </div>
+
+         
         </div>
     </div>
 </body>
