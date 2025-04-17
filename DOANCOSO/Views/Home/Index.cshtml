@@ -1,8 +1,69 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duolingo Clone - Trang chính</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white font-sans">
+
+    <div class="flex min-h-screen">
+        <aside class="w-48 bg-white border-r p-4 space-y-4">
+            <h1 class="text-2xl font-bold text-green-500 mb-4">duolingo</h1>
+            <nav class="space-y-3">
+                <a href="/Home/Index" class="flex items-center gap-2 text-blue-500 font-bold">🏠 HỌC</a>
+                <a href="/Home/PhatAm" class="flex items-center gap-2">👄 PHÁT ÂM</a>
+                <a href="/Home/BangXepHang" class="flex items-center gap-2">🛡️ BẢNG XẾP HẠNG</a>
+                <a href="/Home/NhiemVu" class="flex items-center gap-2">🎯 NHIỆM VỤ</a>
+                <a href="/Home/CuaHang" class="flex items-center gap-2">🛍️ CỬA HÀNG</a>
+                <a href="/Home/HoSo" class="flex items-center gap-2">👤 HỒ SƠ</a>
+                <a href="/Home/XemThem" class="flex items-center gap-2">💬 XEM THÊM</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8 flex flex-col items-center">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Chào mừng bạn đến với Duolingo!</h2>
+            <div class="space-y-4">
+                <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
+                    🐥
+                </div>
+                <p class="text-gray-600 text-center max-w-md">
+                    Hãy chọn một bài học để bắt đầu hành trình học ngoại ngữ của bạn.
+                </p>
+            </div>
+        </main>
+
+        <div class="w-80 p-6 border-l space-y-6">
+            <div class="bg-gray-100 p-4 rounded">
+                <h2 class="font-semibold">Mở khóa Bảng xếp hạng!</h2>
+                <p class="text-sm text-gray-500">Hoàn thành thêm 10 bài học để bắt đầu thi đua</p>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-semibold">Nhiệm vụ hằng ngày</h2>
+                    <a href="#" class="text-sm text-blue-500">XEM TẤT CẢ</a>
+                </div>
+                <div class="flex items-center mt-2 gap-2">
+                    ⚡ Kiếm 10 KN
+                </div>
+                <div class="w-full h-2 bg-gray-300 rounded mt-2">
+                    <div class="w-0 h-2 bg-yellow-400 rounded"></div>
+                </div>
+            </div>
+
+            <!-- Cập nhật phần Tạo hồ sơ và Đăng nhập -->
+            <div class="bg-gray-100 p-4 rounded space-y-3">
+                <p class="font-semibold">Tạo hồ sơ để lưu tiến trình của bạn!</p>
+                <a href="/Identity/Account/Register" class="bg-green-500 text-white px-4 py-2 rounded w-full font-semibold block text-center">TẠO HỒ SƠ</a>
+                <a href="/Identity/Account/Login" class="bg-blue-500 text-white px-4 py-2 rounded w-full font-semibold block text-center">ĐĂNG NHẬP</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
