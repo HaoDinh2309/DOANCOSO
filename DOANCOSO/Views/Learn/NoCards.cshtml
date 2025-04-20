@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Không có flashcard";
+    var customMessage = ViewData["Message"] as string;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Không có flashcard</h2>
+                </div>
+                <div class="card-body">
+                    <div class="my-5">
+                        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 5rem;"></i>
+                        <h3 class="mt-3">Không tìm thấy flashcard</h3>
+                        @if (!string.IsNullOrEmpty(customMessage))
+                        {
+                            <p class="lead">@customMessage</p>
+                        }
+                        else
+                        {
+                            <p class="lead">Hiện tại chưa có flashcard nào trong hệ thống.</p>
+                        }
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-controller="FlashCard" asp-action="Create" class="btn btn-primary">Tạo flashcard mới</a>
+                        <a asp-action="Index" class="btn btn-outline-secondary me-2">Chọn chế độ học khác</a>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Quay lại trang chủ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

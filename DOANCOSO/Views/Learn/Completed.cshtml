@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Hoàn thành";
+    var correctAnswers = Context.Session.GetInt32("CorrectAnswers") ?? 0;
+    var incorrectAnswers = Context.Session.GetInt32("IncorrectAnswers") ?? 0;
+    var totalAnswers = correctAnswers + incorrectAnswers;
+    var correctPercentage = totalAnswers > 0 ? (double)correctAnswers / totalAnswers * 100 : 0;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Kết quả học tập</h2>
+                </div>
+                <div class="card-body">
+                    <h1 class="display-4 text-success">Chúc mừng!</h1>
+                    <p class="lead">Bạn đã hoàn thành bộ flashcard này.</p>
+
+                    <div class="mt-4">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white mb-3">
+                                    <div class="card-body">
+                                        <h3 class="display-4">@correctAnswers</h3>
+                                        <p class="mb-0">Đúng</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-danger text-white mb-3">
+                                    <div class="card-body">
+                                        <h3 class="display-4">@incorrectAnswers</h3>
+                                        <p class="mb-0">Sai</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-info text-white mb-3">
+                                    <div class="card-body">
+                                        <h3 class="display-4">@correctPercentage.ToString("0")%</h3>
+                                        <p class="mb-0">Tỷ lệ đúng</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress mt-4" style="height: 30px;">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: @correctPercentage%;"
+                             aria-valuenow="@correctPercentage" aria-valuemin="0" aria-valuemax="100">
+                            @correctPercentage.ToString("0")%
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="mt-4">
+                        <a asp-action="ReviewMistakes" class="btn btn-warning me-2">Học lại từ sai</a>
+                        <a asp-action="Index" class="btn btn-primary me-2">Chọn chế độ học khác</a>
+                        <a asp-controller="FlashCard" asp-action="Index" class="btn btn-outline-secondary">Xem tất cả flashcard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

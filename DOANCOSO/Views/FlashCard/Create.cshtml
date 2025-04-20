@@ -1,0 +1,26 @@
+﻿@model DOANCOSO.Models.FlashCard
+
+@{
+    ViewData["Title"] = "Create FlashCard";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="Word">Word</label>
+        <input type="text" class="form-control" id="Word" name="Word" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Definition">Definition</label>
+        <input type="text" class="form-control" id="Definition" name="Definition" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ImageFile">Select Image (optional)</label>
+        <input type="file" class="form-control" id="ImageFile" name="imageFile" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

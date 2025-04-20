@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Học từ vựng";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Học từ vựng</h2>
+                </div>
+                <div class="card-body">
+                    <div class="my-4">
+                        <i class="bi bi-book text-primary" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">Bắt đầu học từ vựng với Flashcard</h3>
+                        <p class="lead">Bạn có thể dễ dàng chuyển đổi giữa xem định nghĩa và hình ảnh trong quá trình học.</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-action="StartLearning" class="btn btn-primary btn-lg">Bắt đầu học</a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mt-4">
+                        <a asp-action="ReviewMistakes" class="btn btn-warning">Học lại các từ sai</a>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Quay lại trang chủ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

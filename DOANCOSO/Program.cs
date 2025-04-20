@@ -1,4 +1,5 @@
-using DOANCOSO.Models;
+﻿using DOANCOSO.Models;
+using DOANCOSO.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +16,19 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
  .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
-//builder.Services.AddScoped<IProductRepository, EFProductRepository>();
-//builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
+builder.Services.AddScoped<IFlashCardRepository, FlashCardRepository>();
+
+// Thêm vào builder.Services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -25,6 +37,8 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseRouting();
+// Thêm app.UseSession() trước app.UseAuthorization()
+app.UseSession();
 app.UseAuthentication();;
 app.UseAuthorization();
 app.MapControllerRoute(

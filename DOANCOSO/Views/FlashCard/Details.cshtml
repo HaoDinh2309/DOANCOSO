@@ -1,0 +1,40 @@
+﻿@model DOANCOSO.Models.FlashCard
+@{
+    ViewData["Title"] = "Chi tiết Flashcard";
+}
+
+<div class="container mt-4">
+    <h2>Chi tiết Flashcard</h2>
+
+    <div class="card mb-4">
+        <div class="row g-0">
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" class="img-fluid rounded-start" alt="@Model.Word">
+                }
+                else
+                {
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 100%;">
+                        <span class="text-muted">Không có hình ảnh</span>
+                    </div>
+                }
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">@Model.Word</h3>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-3">Định nghĩa:</dt>
+                        <dd class="col-sm-9">@Model.Definition</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Sửa</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+</div>

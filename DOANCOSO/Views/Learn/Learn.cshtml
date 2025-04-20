@@ -1,0 +1,141 @@
+﻿@model DOANCOSO.Models.FlashCard
+@{
+    ViewData["Title"] = "Học từ vựng";
+    var showAnswer = ViewData["ShowAnswer"] as bool? ?? false;
+    var isCorrect = ViewData["IsCorrect"] as bool? ?? false;
+    var userAnswer = ViewData["UserAnswer"] as string ?? "";
+    var viewMode = Context.Session.GetString("ViewMode") ?? "Definition";
+    var currentIndex = Context.Session.GetInt32("CurrentIndex") ?? 0;
+    var cardIdsString = Context.Session.GetString("CardIds");
+    var totalCards = !string.IsNullOrEmpty(cardIdsString) ? cardIdsString.Split(',').Length : 0;
+    var hasImage = !string.IsNullOrEmpty(Model.ImageUrl);
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">Flashcard</h3>
+                        <small>Đang hiển thị: @(viewMode == "Definition" ? "Định nghĩa" : "Hình ảnh")</small>
+                    </div>
+                    <div>
+                        <span class="me-3">Đúng: @(Context.Session.GetInt32("CorrectAnswers") ?? 0)</span>
+                        <span class="me-3">Sai: @(Context.Session.GetInt32("IncorrectAnswers") ?? 0)</span>
+                        <span>Thẻ: @(currentIndex + 1)/@totalCards</span>
+                    </div>
+                </div>
+
+                <div class="card-body text-center p-5">
+                    @if (viewMode == "Definition")
+                    {
+                        <div class="mb-4">
+                            <h4>Định nghĩa:</h4>
+                            <p class="lead">@Model.Definition</p>
+                        </div>
+                        @if (hasImage)
+                        {
+                            <a asp-action="ToggleViewMode" asp-route-id="@Model.Id" class="btn btn-sm btn-info mb-3">
+                                <i class="bi bi-image"></i> Xem hình ảnh
+                            </a>
+                        }
+                    }
+                    else // Image mode
+                    {
+                        <div class="mb-4">
+                            <h4>Hình ảnh:</h4>
+                            @if (hasImage)
+                            {
+                                <img src="@Model.ImageUrl" alt="Image flashcard" class="img-fluid" style="max-height: 300px;">
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle"></i> Flashcard này không có hình ảnh
+                                </div>
+                            }
+                        </div>
+                        <a asp-action="ToggleViewMode" asp-route-id="@Model.Id" class="btn btn-sm btn-info mb-3">
+                            <i class="bi bi-book"></i> Xem định nghĩa
+                        </a>
+                    }
+
+                    @if (!showAnswer)
+                    {
+                        <div class="mt-4">
+                            <form asp-action="CheckAnswer" method="post" class="row g-3 justify-content-center">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <div class="col-md-8">
+                                    <input type="text" name="userAnswer" class="form-control form-control-lg"
+                                           placeholder="Nhập từ vựng" autocomplete="off" required autofocus />
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">Kiểm tra</button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mt-4">
+                            @if (isCorrect)
+                            {
+                                <div class="alert alert-success">
+                                    <h4 class="mb-0"><i class="bi bi-check-circle-fill"></i> Chính xác!</h4>
+                                    <p class="mb-0">Đáp án của bạn: <strong>@userAnswer</strong></p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger">
+                                    <h4 class="mb-0"><i class="bi bi-x-circle-fill"></i> Chưa chính xác!</h4>
+                                    <p class="mb-0">Đáp án của bạn: <strong>@userAnswer</strong></p>
+                                    <p class="mb-0">Đáp án đúng: <strong>@Model.Word</strong></p>
+                                </div>
+                            }
+
+                            @if (viewMode == "Definition" && hasImage)
+                            {
+                                <div class="mt-4">
+                                    <h5>Hình ảnh:</h5>
+                                    <img src="@Model.ImageUrl" alt="@Model.Word" class="img-fluid" style="max-height: 200px;">
+                                </div>
+                            }
+                            else if (viewMode == "Image")
+                            {
+                                <div class="mt-4">
+                                    <h5>Định nghĩa:</h5>
+                                    <p>@Model.Definition</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer">
+                    <div class="row">
+                        @if (!showAnswer)
+                        {
+                            <div class="col">
+                                <form asp-action="ShowAnswer" method="post">
+                                    <input type="hidden" name="id" value="@Model.Id" />
+                                    <button type="submit" class="btn btn-secondary w-100">Hiển thị đáp án</button>
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col">
+                                <a asp-action="NextCard" class="btn btn-success w-100">Thẻ tiếp theo</a>
+                            </div>
+                        }
+                        <div class="col-auto">
+                            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
